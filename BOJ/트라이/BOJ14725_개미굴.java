@@ -1,6 +1,10 @@
 /*
  * 개미가 개미굴을 타고 내려가면서 있는 먹이를 파악한다.
  * 입력 순서대로 Trie 생성 후, dfs 로 출력
+ * 
+ * =======================
+ * Refactor : HashMap 대신 Node[26] 배열 사용
+ * 314808 KB, 1048 ms -> 174492 KB, 492 ms 로 메모리, 시간 대략 절반 감소
  */
 
 import java.io.BufferedReader;
