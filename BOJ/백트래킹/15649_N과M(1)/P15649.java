@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.LinkedList;
 
-public class Main {
+public class P15649 {
 
 	static int N, M;
 	static boolean[] visit;

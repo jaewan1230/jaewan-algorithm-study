@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 
-public class Main {
+public class BOJ1197_최소스패닝트리 {
     static int[] parent, rank;
     static Node[] graph;
     static PriorityQueue<Edge> allEdges = new PriorityQueue<>();
