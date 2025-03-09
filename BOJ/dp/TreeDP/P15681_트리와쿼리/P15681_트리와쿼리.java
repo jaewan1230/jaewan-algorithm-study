@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
-public class Main {
+public class P15681_트리와쿼리 {
 	static int N;
 	static int[] dp;
 	static ArrayList<Integer>[] graph;

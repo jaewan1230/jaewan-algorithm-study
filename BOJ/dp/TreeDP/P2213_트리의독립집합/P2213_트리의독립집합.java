@@ -23,7 +23,7 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-public class Main {
+public class P2213_트리의독립집합 {
 
 	static int N;
 	static int[][] dp;

@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.LinkedList;
 
-public class Main {
+public class BOJ1949_우수마을 {
 	static int N;
 	static Node[] nodes;
 	static int[][] dp;
