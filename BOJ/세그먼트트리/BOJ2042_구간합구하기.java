@@ -5,69 +5,67 @@
 
 import java.io.IOException;
 
-public class Main {
-    static long[] arr, tree;
+public class BOJ2042_구간합구하기 {
+    static int N, M, K;
+    static long[] tree;
 
     public static void main(String[] args) throws IOException {
-        int N = readInt(), M = readInt(), K = readInt();
-        arr = new long[N + 1];
-        for (int i = 1; i <= N; i++)
-            arr[i] = readLong();
+        N = readInt();
+        M = readInt();
+        K = readInt();
+        tree = new long[N << 1];
 
-        tree = new long[N * 4];
-        init(1, N, 1);
+        for (int i = 0; i < N; i++)
+            tree[N + i] = readLong();
+
+        init();
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < M + K; i++) {
             int a = readInt(), b = readInt();
             long c = readLong();
-            if (a == 1) {
-                long diff = c - arr[b];
-                arr[b] = c;
-                update(1, N, 1, b, diff);
-            } else {
-                sb.append(sum(1, N, 1, b, (int) c)).append('\n');
-            }
+            if (a == 1)
+                update(b, c);
+            else
+                sb.append(sum(b, (int) c)).append('\n');
+
         }
         System.out.println(sb.toString());
     }
 
     // start: 시작 인덱스, end: 끝 인덱스
-    static long init(int start, int end, int node) {
-        if (start == end)
-            return tree[node] = arr[start];
-        int mid = (start + end) / 2;
-        return tree[node] = init(start, mid, node * 2) + init(mid + 1, end, node * 2 + 1);
+    static void init() {
+        for (int i = N - 1; i > 0; i--)
+            tree[i] = tree[i * 2] + tree[i * 2 + 1];
     }
 
     // left, right: 구간 합 구하고자 하는 범위
-    static long sum(int start, int end, int node, int left, int right) {
-        // 범위 밖에 있는 경우
-        if (right < start || end < left)
-            return 0;
-        // 범위 안에 있는 경우
-        if (left <= start && end <= right) {
-            return tree[node];
-        }
+    static long sum(int left, int right) {
+        left += N - 1;
+        right += N - 1;
 
-        // 그렇지 않다면, 두 부분으로 나누어 합을 구하기
-        int mid = (start + end) / 2;
-        return sum(start, mid, node * 2, left, right) + sum(mid + 1, end, node * 2 + 1, left, right);
+        long sum = 0;
+
+        while (left <= right) {
+            if ((left & 1) == 1)
+                sum += tree[left++];
+            if ((right & 1) == 0)
+                sum += tree[right--];
+            left >>= 1;
+            right >>= 1;
+        }
+        return sum;
     }
 
-    // idx: 구간 합을 수정하고자 하는 노드, diff: 수정할 값
-    static void update(int start, int end, int node, int idx, long diff) {
-        // 범위 밖에 있는 경우
-        if (idx < start || end < idx)
-            return;
-        // 범위 안에 있으면 내려가며 다른 원소도 갱신
-        tree[node] += diff;
-        if (start == end)
-            return;
+    // idx: 구간 합을 수정하고자 하는 노드, value: 수정할 값
+    static void update(int idx, long value) {
+        int startIdx = idx + N - 1;
+        long diff = value - tree[startIdx];
 
-        int mid = (start + end) / 2;
-        update(start, mid, node * 2, idx, diff);
-        update(mid + 1, end, node * 2 + 1, idx, diff);
+        while (startIdx > 0) {
+            tree[startIdx] += diff;
+            startIdx >>= 1;
+        }
     }
 
     static int readInt() throws IOException {
