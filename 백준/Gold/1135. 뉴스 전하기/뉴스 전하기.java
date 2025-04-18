@@ -34,8 +34,8 @@ public class Main {
         }
 
         dp = new int[N];
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
         for (int i = N - 1; i >= 0; i--) {
-            PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
             for (int child : tree[i].child)
                 pq.offer(dp[child]);
 
