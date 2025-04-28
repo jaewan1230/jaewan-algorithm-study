@@ -1,3 +1,4 @@
+// 143472 KB, 976 ms
 /*
  * 정보 고릴라에게 정보를 구매
  * 어떤 고릴라가 어떤 가치가 있는 정보 k 개를 얻었다는 사실을 알고 있음.
@@ -23,28 +24,30 @@
  * 
  * 처음에 마지막 줄 못 보고, 최악의 경우 1e10개의 데이터가 들어오는 줄 알았음;
  * 하지만 1e6이니까, 단순히 PQ로 구현하면 될듯
+ * 
+ * Map
  */
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 public class Main {
+    static StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
 
     public static void main(String[] args) throws NumberFormatException, IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+        int N = nextInt();
 
         long cnt = 0;
-        TreeMap<String, PriorityQueue<Integer>> 고릴라 = new TreeMap<>();
+        HashMap<String, PriorityQueue<Integer>> 고릴라 = new HashMap<>();
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int opt = Integer.parseInt(st.nextToken());
-            String name = st.nextToken();
+            int opt = nextInt();
+            String name = nextString();
 
             switch (opt) {
                 case 1:
@@ -53,9 +56,9 @@ public class Main {
                         고릴라.put(name, pq);
                     }
                     PriorityQueue<Integer> pq = 고릴라.get(name);
-                    int k = Integer.parseInt(st.nextToken());
+                    int k = nextInt();
                     for (int j = 0; j < k; j++)
-                        pq.offer(Integer.parseInt(st.nextToken()));
+                        pq.offer(nextInt());
                     break;
 
                 case 2:
@@ -64,7 +67,7 @@ public class Main {
                         break;
                     }
                     pq = 고릴라.get(name);
-                    int b = Integer.parseInt(st.nextToken());
+                    int b = nextInt();
                     while (b-- > 0 && !pq.isEmpty())
                         cnt += pq.poll();
                     break;
@@ -72,5 +75,15 @@ public class Main {
         }
 
         System.out.println(cnt);
+    }
+
+    static int nextInt() throws IOException {
+        st.nextToken();
+        return (int) st.nval;
+    }
+
+    static String nextString() throws IOException {
+        st.nextToken();
+        return st.sval;
     }
 }
