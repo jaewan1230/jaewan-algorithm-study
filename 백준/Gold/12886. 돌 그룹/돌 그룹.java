@@ -1,60 +1,41 @@
 /*
- * 돌 그룹 두 그룹. 개수 작은 쪽 X, 큰 쪽 Y.
- * X 개수를 X+X로, Y 개수를 Y-X로.
- * A, B, C가 주어졌을 때 같은 개수로 만들 수 있으면 1, 아니면 0 출력.
+ * gcd로 세 수를 나누고,
+ * 연산을 잘 살펴보면 작은 수는 + 작은 수, 큰 수는 - 작은 수 이므로 전체 합은 동일
+ * 먼저 전체 합이 3으로 나누어 떨어져야 함.
  * 
- * A, B, C <= 500
- * 
- * 그냥 다 해보면 되는듯?
- * 중복만 제거하고.
+ * 그리고 작은 수는 x 2 연산이다 보니, 만들어야 되는 수가 2의 거듭제곱 꼴이 아니면 못 만드는 듯..?
  */
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Objects;
+import java.math.BigInteger;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println(BFS());
+        BigInteger A = BigInteger.valueOf(readInt());
+        BigInteger B = BigInteger.valueOf(readInt());
+        BigInteger C = BigInteger.valueOf(readInt());
+
+        BigInteger gcd = A.gcd(B).gcd(C);
+
+        A = A.divide(gcd);
+        B = B.divide(gcd);
+        C = C.divide(gcd);
+        int a = A.intValue(), b = B.intValue(), c = C.intValue();
+        System.out.println(func(a + b + c) ? 1 : 0);
     }
 
-    static int BFS() throws IOException {
-        HashSet<Data> visit = new HashSet<>();
-        ArrayDeque<Data> q = new ArrayDeque<>();
-        Data d = new Data(readInt(), readInt(), readInt());
-        visit.add(d);
-        q.offer(d);
-        while (!q.isEmpty()) {
-            Data cur = q.poll();
-            if (cur.A == cur.B && cur.B == cur.C) {
-                return 1;
-            }
-
-            if (cur.A != cur.B) {
-                Data next = new Data(cur.A + cur.A, cur.B - cur.A, cur.C);
-                if (!visit.contains(next)) {
-                    visit.add(next);
-                    q.offer(next);
-                }
-            }
-
-            if (cur.B != cur.C) {
-                Data next = new Data(cur.A, cur.B + cur.B, cur.C - cur.B);
-                if (!visit.contains(next)) {
-                    visit.add(next);
-                    q.offer(next);
-                }
-            }
-
-            Data next = new Data(cur.A + cur.A, cur.B, cur.C - cur.A);
-            if (!visit.contains(next)) {
-                visit.add(next);
-                q.offer(next);
-            }
+    static boolean func(int sum) {
+        if (sum % 3 != 0)
+            return false;
+        sum /= 3;
+        int bit = 1;
+        while (bit <= sum) {
+            if (bit == sum)
+                return true;
+            bit <<= 1;
         }
-        return 0;
+        return false;
     }
 
     static int readInt() throws IOException {
@@ -65,30 +46,5 @@ public class Main {
         while ((c = System.in.read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
         return n;
-    }
-
-    static class Data {
-        int A, B, C;
-
-        @Override
-        public boolean equals(Object obj) {
-            Data d = (Data) obj;
-            return A == d.A && B == d.B && C == d.C;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(A, B, C);
-        }
-
-        public Data(int a, int b, int c) {
-            int sum = a + b + c;
-            int max = Math.max(a, Math.max(b, c));
-            int min = Math.min(a, Math.min(b, c));
-            A = min;
-            C = max;
-            B = sum - A - C;
-        }
-
     }
 }
