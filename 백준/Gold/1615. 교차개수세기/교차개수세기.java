@@ -16,16 +16,18 @@ public class Main {
     public static void main(String[] args) throws IOException {
         N = readInt();
         M = readInt();
-        Data[] inDatas = new Data[M];
+        int[] inDatas = new int[M];
         for (int i = 0; i < M; i++)
-            inDatas[i] = new Data(readInt(), readInt());
+            inDatas[i] = 10000 * readInt() + readInt();
         Arrays.sort(inDatas);
+        for (int i = 0; i < M; i++)
+            inDatas[i] %= 10000;
 
         tree = new int[N << 1];
         long sum = 0;
         for (int i = 0; i < M; i++) {
-            sum += sum(inDatas[i].r + 1, N);
-            add(inDatas[i].r);
+            sum += sum(inDatas[i] + 1, N);
+            add(inDatas[i]);
         }
         System.out.println(sum);
     }
@@ -53,25 +55,8 @@ public class Main {
         }
     }
 
-    static class Data implements Comparable<Data> {
-        int l, r;
-
-        public Data(int l, int r) {
-            this.l = l;
-            this.r = r;
-        }
-
-        @Override
-        public int compareTo(Main.Data o) {
-            return l != o.l ? l - o.l : r - o.r;
-        }
-
-    }
-
     static int readInt() throws IOException {
-        int c;
-        while ((c = System.in.read()) <= 32)
-            ;
+        int c = System.in.read();
         int n = c & 15;
         while ((c = System.in.read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
