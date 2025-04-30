@@ -80,12 +80,9 @@ public class Main {
         int c;
         while ((c = System.in.read()) <= 32)
             ;
-        boolean negative = c == 45;
-        if (negative)
-            c = System.in.read();
         int n = c & 15;
         while ((c = System.in.read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
-        return negative ? -n : n;
+        return n;
     }
 }
