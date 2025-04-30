@@ -18,10 +18,10 @@ public class Main {
         M = readInt();
         int[] inDatas = new int[M];
         for (int i = 0; i < M; i++)
-            inDatas[i] = 10000 * readInt() + readInt();
+            inDatas[i] = (readInt() << 12) + readInt();
         Arrays.sort(inDatas);
         for (int i = 0; i < M; i++)
-            inDatas[i] %= 10000;
+            inDatas[i] &= 0xFFF;
 
         tree = new int[N << 1];
         long sum = 0;
@@ -55,10 +55,21 @@ public class Main {
         }
     }
 
+    static byte[] buf = new byte[8192];
+    static int size, pos;
+
+    static byte read() throws IOException {
+        if (pos == size) {
+            size = System.in.read(buf);
+            pos = 0;
+        }
+        return buf[pos++];
+    }
+
     static int readInt() throws IOException {
-        int c = System.in.read();
+        int c = read();
         int n = c & 15;
-        while ((c = System.in.read()) > 47)
+        while ((c = read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
         return n;
     }
