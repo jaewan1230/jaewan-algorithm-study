@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 public class Main {
     static int N, M;
+    static int[] tree;
 
     public static void main(String[] args) throws IOException {
         N = readInt();
@@ -20,14 +21,36 @@ public class Main {
             inDatas[i] = new Data(readInt(), readInt());
         Arrays.sort(inDatas);
 
-        segTree s = new segTree();
-        s.init();
+        tree = new int[N << 1];
         long sum = 0;
         for (int i = 0; i < M; i++) {
-            sum += s.sum(inDatas[i].r + 1, N);
-            s.add(inDatas[i].r);
+            sum += sum(inDatas[i].r + 1, N);
+            add(inDatas[i].r);
         }
         System.out.println(sum);
+    }
+
+    static int sum(int left, int right) {
+        left += (N - 1);
+        right += (N - 1);
+        int res = 0;
+        while (left <= right) {
+            if ((left & 1) != 0)
+                res += tree[left++];
+            if ((right & 1) == 0)
+                res += tree[right--];
+            left >>= 1;
+            right >>= 1;
+        }
+        return res;
+    }
+
+    static void add(int x) {
+        x += (N - 1);
+        while (x > 0) {
+            tree[x]++;
+            x >>= 1;
+        }
     }
 
     static class Data implements Comparable<Data> {
@@ -43,37 +66,6 @@ public class Main {
             return l != o.l ? l - o.l : r - o.r;
         }
 
-    }
-
-    static class segTree {
-        int[] tree;
-
-        void init() {
-            tree = new int[N << 1];
-        }
-
-        int sum(int left, int right) {
-            left += (N - 1);
-            right += (N - 1);
-            int res = 0;
-            while (left <= right) {
-                if ((left & 1) != 0)
-                    res += tree[left++];
-                if ((right & 1) == 0)
-                    res += tree[right--];
-                left >>= 1;
-                right >>= 1;
-            }
-            return res;
-        }
-
-        void add(int x) {
-            x += (N - 1);
-            while (x > 0) {
-                tree[x]++;
-                x >>= 1;
-            }
-        }
     }
 
     static int readInt() throws IOException {
