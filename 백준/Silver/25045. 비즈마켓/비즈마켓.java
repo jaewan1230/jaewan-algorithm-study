@@ -1,3 +1,4 @@
+// 26276 KB, 460 ms
 /*
  * 상품 수, 고객 기업 수 N, M
  * 만족도 N 개
@@ -15,25 +16,26 @@
  */
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         int N = readInt(), M = readInt();
-        PriorityQueue<Integer> products = new PriorityQueue<>(Collections.reverseOrder());
+        int[] products = new int[N];
         for (int i = 0; i < N; i++)
-            products.add(readInt());
+            products[i] = readInt();
+        Arrays.sort(products);
 
-        PriorityQueue<Integer> budgets = new PriorityQueue<>();
+        int[] budgets = new int[M];
         for (int i = 0; i < M; i++)
-            budgets.add(readInt());
+            budgets[i] = readInt();
+        Arrays.sort(budgets);
 
         long res = 0;
         int j = Math.min(N, M);
-        while (j-- > 0) {
-            int t = products.poll() - budgets.poll();
+        for (int i = 0; i < j; i++) {
+            int t = products[N - i - 1] - budgets[i];
             if (t < 0)
                 break;
             res += t;
