@@ -6,14 +6,13 @@
  */
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 public class Main {
     static int N, S, P, res;
     static boolean[] visit;
     static Node[] tree;
-    static PriorityQueue<Integer> depthPQ = new PriorityQueue<>();
 
     public static void main(String[] args) throws IOException {
         N = readInt();
@@ -37,21 +36,24 @@ public class Main {
         visit = new boolean[N + 1];
         visit[P] = true;
 
-        DFS(P, 0);
-        System.out.println(res - depthPQ.poll() - depthPQ.poll());
-    }
+        ArrayDeque<int[]> q = new ArrayDeque<>();
+        q.offer(new int[] { P, 0 });
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            if (cur[0] <= S) {
+                res -= cur[1];
+                if (res != N - 1 - cur[1])
+                    break;
+            }
 
-    static void DFS(int n, int depth) {
-        // 지지대일때
-        if (n <= S)
-            depthPQ.add(depth);
-
-        for (int next : tree[n].link) {
-            if (visit[next])
-                continue;
-            visit[next] = true;
-            DFS(next, depth + 1);
+            for (int next : tree[cur[0]].link) {
+                if (visit[next])
+                    continue;
+                visit[next] = true;
+                q.offer(new int[] { next, cur[1] + 1 });
+            }
         }
+        System.out.println(res);
     }
 
     static class Node {
