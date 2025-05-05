@@ -22,8 +22,6 @@
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.PriorityQueue;
 
 public class Main {
 
@@ -31,32 +29,30 @@ public class Main {
         int N = readInt();
         int[][] pos = new int[2][N];
         int[] min = new int[N];
-        HashSet<Integer> xPos = new HashSet<>(), yPos = new HashSet<>();
         Arrays.fill(min, Integer.MAX_VALUE);
 
         for (int i = 0; i < N; i++) {
             pos[0][i] = readInt();
             pos[1][i] = readInt();
-            xPos.add(pos[0][i]);
-            yPos.add(pos[1][i]);
         }
 
-        for (int x : xPos) {
-            for (int y : yPos) {
-                PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int x : pos[0]) {
+            for (int y : pos[1]) {
+                int[] temp = new int[N];
                 for (int j = 0; j < N; j++)
-                    pq.offer(Math.abs(x - pos[0][j]) + Math.abs(y - pos[1][j]));
+                    temp[j] = Math.abs(x - pos[0][j]) + Math.abs(y - pos[1][j]);
+                Arrays.sort(temp);
 
-                int sum = 0;
-                for (int j = 0; j < N; j++) {
-                    sum += pq.poll();
-                    min[j] = Math.min(sum, min[j]);
+                for (int j = 1; j < N; j++) {
+                    temp[j] += temp[j - 1];
+                    min[j] = Math.min(temp[j], min[j]);
                 }
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < N; i++)
+        sb.append("0 ");
+        for (int i = 1; i < N; i++)
             sb.append(min[i]).append(' ');
         System.out.print(sb);
     }
