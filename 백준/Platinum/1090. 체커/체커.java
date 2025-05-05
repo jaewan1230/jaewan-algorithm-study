@@ -29,23 +29,23 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int N = readInt();
-        int[][] pos = new int[N][2];
+        int[][] pos = new int[2][N];
         int[] min = new int[N];
         HashSet<Integer> xPos = new HashSet<>(), yPos = new HashSet<>();
         Arrays.fill(min, Integer.MAX_VALUE);
 
         for (int i = 0; i < N; i++) {
-            pos[i][0] = readInt();
-            pos[i][1] = readInt();
-            xPos.add(pos[i][0]);
-            yPos.add(pos[i][1]);
+            pos[0][i] = readInt();
+            pos[1][i] = readInt();
+            xPos.add(pos[0][i]);
+            yPos.add(pos[1][i]);
         }
 
         for (int x : xPos) {
             for (int y : yPos) {
                 PriorityQueue<Integer> pq = new PriorityQueue<>();
                 for (int j = 0; j < N; j++)
-                    pq.offer(Math.abs(x - pos[j][0]) + Math.abs(y - pos[j][1]));
+                    pq.offer(Math.abs(x - pos[0][j]) + Math.abs(y - pos[1][j]));
 
                 int sum = 0;
                 for (int j = 0; j < N; j++) {
@@ -56,9 +56,8 @@ public class Main {
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; i++)
             sb.append(min[i]).append(' ');
-        }
         System.out.print(sb);
     }
 
