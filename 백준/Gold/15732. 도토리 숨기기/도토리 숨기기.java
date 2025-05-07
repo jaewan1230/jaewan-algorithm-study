@@ -46,7 +46,7 @@ public class Main {
             if (no < rules[i].start) {
                 continue;
             }
-            sum += Math.max((Math.min(no, rules[i].end) - rules[i].start) / rules[i].gap + 1, 0);
+            sum += (Math.min(no, rules[i].end) - rules[i].start) / rules[i].gap + 1;
         }
         return sum < D;
     }
