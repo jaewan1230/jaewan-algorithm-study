@@ -16,41 +16,37 @@ import java.io.IOException;
 
 public class Main {
     static final int[] scores = { 0, 1, 4, 6, 8, 9, 10, 12, 14, 15, 16, 18 };
-    static final double[] logComb = {
-            0.0,
-            Math.log(18),
-            Math.log(3060),
-            Math.log(18564),
-            Math.log(43758),
-            Math.log(48620),
-            Math.log(43758),
-            Math.log(18564),
-            Math.log(3060),
-            Math.log(816),
-            Math.log(153),
-            0.0
+    static final double[] Comb = {
+            1.0,
+            18,
+            3060,
+            18564,
+            43758,
+            48620,
+            43758,
+            18564,
+            3060,
+            816,
+            153,
+            1.0
     };
 
     public static void main(String[] args) throws IOException {
         int A = readInt(), B = readInt();
 
-        System.out.println(1 - func(A) * func(B));
+        System.out.println(1 - func(A, B));
     }
 
-    static double func(int n) {
-        if (n == 0 || n == 100)
-            return 1.0;
-
-        double p = n / 100.0, res = 0;
-        double logP = Math.log(p), logQ = Math.log(1 - p);
+    static double func(int a, int b) {
+        double pA = a / 100.0, qA = 1 - pA, pB = b / 100.0, qB = 1 - pB, resA = 0, resB = 0;
 
         for (int i = 0; i < scores.length; i++) {
             int k = scores[i];
-            double t = logComb[i] + k * logP + (18 - k) * logQ;
-            res += Math.exp(t);
+            resA += Math.pow(pA, k) * Math.pow(qA, 18 - k) * Comb[i];
+            resB += Math.pow(pB, k) * Math.pow(qB, 18 - k) * Comb[i];
         }
 
-        return res;
+        return resA * resB;
     }
 
     static int readInt() throws IOException {
