@@ -55,7 +55,7 @@ public class Main {
                 }
 
             boolean[] visit = new boolean[n + 1];
-            while (!q.isEmpty()) {
+            while (q.size() == 1) {
                 int cur = q.poll();
                 visit[cur] = true;
                 for (int next : tree[cur].link) {
@@ -79,12 +79,23 @@ public class Main {
         HashSet<Integer> link = new HashSet<>();
     }
 
+    static int pos, len;
+    static byte[] buf = new byte[8192];
+
+    static byte read() throws IOException {
+        if (pos == len) {
+            len = System.in.read(buf);
+            pos = 0;
+        }
+        return buf[pos++];
+    }
+
     static int readInt() throws IOException {
         int c;
-        while ((c = System.in.read()) <= 32)
+        while ((c = read()) <= 32)
             ;
         int n = c & 15;
-        while ((c = System.in.read()) > 47)
+        while ((c = read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
         return n;
     }
