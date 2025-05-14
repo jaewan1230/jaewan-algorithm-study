@@ -1,6 +1,7 @@
+// 
 /*
  * 문자열을 규칙에 따라 정렬
- * 이진탐색해서 삽입될 위치 결정하고 삽입
+ * ComparaTo 정의해서 그냥 정렬하자
  * O(N log N) 
  */
 
@@ -16,14 +17,14 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         Data[] data = new Data[N];
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; i++)
             data[i] = new Data(br.readLine().toCharArray());
-        }
 
         Arrays.sort(data);
-        for (int i = 0; i < N; i++) {
-            System.out.println(String.valueOf(data[i].chars));
-        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < N; i++)
+            sb.append(String.valueOf(data[i].chars)).append('\n');
+        System.out.print(sb);
     }
 
     static class Data implements Comparable<Data> {
