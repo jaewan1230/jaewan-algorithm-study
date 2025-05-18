@@ -74,9 +74,20 @@ public class Main {
         return false;
     }
 
+    static int pos, len;
+    static byte[] buf = new byte[8192];
+
+    static byte read() throws IOException {
+        if (pos == len) {
+            len = System.in.read(buf);
+            pos = 0;
+        }
+        return buf[pos++];
+    }
+
     static int readInt() throws IOException {
-        int c = System.in.read(), n = c & 15;
-        while ((c = System.in.read()) > 47)
+        int c = read(), n = c & 15;
+        while ((c = read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
         return n;
     }
