@@ -1,41 +1,32 @@
-/*
- * 수 1개로 만들 수 있는 Set, 2개로 만든 Set, 3개로 만든 Set 만들기
- * 
- */
-
 import java.io.IOException;
-import java.util.HashSet;
 
 public class Main {
+    static final int GAP = 1_000_000;
 
     public static void main(String[] args) throws IOException {
-        int N = readInt(), cnt = 0, in;
-        HashSet<Integer> one = new HashSet<>(), two = new HashSet<>();
+        int N = readInt(), cnt = 0;
+        int[] arr = new int[N];
+        boolean[] visit = new boolean[(GAP << 1) + 1];
+
+        for (int i = 0; i < N; i++)
+            arr[i] = readInt();
 
         for (int i = 0; i < N; i++) {
-            in = readInt();
-            if (in % 3 == 0 && one.contains(in / 3))
-                cnt++;
-            else {
-                for (int t : one) {
-                    if (two.contains(in - t)) {
-                        cnt++;
-                        break;
-                    }
+            for (int j = 0; j < i; j++) {
+                if (visit[(arr[i] - arr[j]) + GAP]) {
+                    cnt++;
+                    break;
                 }
             }
-            // 숫자 2개로 만들 수 있는 수 집합
-            for (int t : one)
-                two.add(in + t);
-            one.add(in);
+            for (int j = 0; j <= i; j++) 
+                visit[arr[i] + arr[j] + GAP] = true;
         }
         System.out.println(cnt);
+
     }
 
     static int readInt() throws IOException {
-        int c;
-        while ((c = System.in.read()) <= 32)
-            ;
+        int c = System.in.read();
         boolean negative = c == 45;
         if (negative)
             c = System.in.read();
