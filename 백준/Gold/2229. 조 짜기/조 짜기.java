@@ -8,21 +8,30 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws Exception {
         int N = readInt();
-        int[] arr = new int[N + 1], dp = new int[N + 1];
 
-        for (int i = 1; i <= N; i++)
-            arr[i] = readInt();
+        if (N == 1) {
+            readInt();
+            System.out.println(0);
+        } else {
 
-        int min, max;
-        for (int i = 1; i <= N; i++) {
-            min = max = arr[i];
-            for (int j = i; j > 0; j--) {
-                min = Math.min(min, arr[j]);
-                max = Math.max(max, arr[j]);
-                dp[i] = Math.max(dp[i], dp[j - 1] + max - min);
+            int[] dp = new int[N];
+            int prevNum, num, diff, prevDiff = -readInt() + (prevNum = readInt());
+            dp[1] = Math.abs(prevDiff);
+            for (int i = 2; i < N; i++) {
+                num = readInt();
+                diff = num - prevNum;
+                if (diff == 0)
+                    dp[i] = dp[i - 1];
+                else if (prevDiff * diff > 0) {
+                    dp[i] = dp[i - 1] + Math.abs(diff);
+                } else {
+                    dp[i] = Math.max(dp[i - 1], dp[i - 2] + Math.abs(diff));
+                }
+                prevDiff = diff;
+                prevNum = num;
             }
+            System.out.println(dp[N - 1]);
         }
-        System.out.println(dp[N]);
     }
 
     static int pos, len;
