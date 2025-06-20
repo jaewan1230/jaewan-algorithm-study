@@ -30,23 +30,24 @@ public class Main {
             tree[v].link.add(u);
         }
 
-        dp = new int[N + 1][2];
+        dp = new int[2][N + 1];
         check = new boolean[N + 1];
         check[1] = true;
         dfs(1);
-        System.out.println(Math.min(dp[1][0], dp[1][1]));
+        System.out.println(Math.min(dp[0][1], dp[1][1]));
     }
 
     static void dfs(int cur) {
+        dp[1][cur] = 1;
         for (int next : tree[cur].link) {
             if (check[next])
                 continue;
             check[next] = true;
             dfs(next);
-            dp[cur][0] += dp[next][1];
-            dp[cur][1] += Math.min(dp[next][0], dp[next][1]);
+
+            dp[0][cur] += dp[1][next];
+            dp[1][cur] += Math.min(dp[0][next], dp[1][next]);
         }
-        dp[cur][1] += 1;
     }
 
     static class Node {
