@@ -13,21 +13,25 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int N = readInt(), a = readInt(), b = readInt(), idx = 0;
-        int[] arr = new int[N];
         StringBuilder sb = new StringBuilder();
         if (a + b > N + 1)
             System.out.println(-1);
         else {
-            for (int i = 1; i <= a - 1; i++)
-                arr[idx++] = i;
-            arr[idx++] = Math.max(a, b);
-            for (int i = b - 1; i > 0; i--)
-                arr[idx++] = i;
-            sb.append(arr[0]).append(' ');
-            for (int i = 0; i < N - (a + b - 1); i++)
+            int ones = N - (a + b - 1);
+            if (a > 1) {
                 sb.append(1).append(' ');
-            for (int i = 1; i < idx; i++)
-                sb.append(arr[i]).append(' ');
+                for (int i = 0; i < ones; i++)
+                    sb.append(1).append(' ');
+                for (int i = 2; i <= a - 1; i++)
+                    sb.append(i).append(' ');
+                sb.append(Math.max(a, b)).append(' ');
+            } else {
+                sb.append(b).append(' ');
+                for (int i = 0; i < ones; i++)
+                    sb.append(1).append(' ');
+            }
+            for (int i = b - 1; i > 0; i--)
+                sb.append(i).append(' ');
             System.out.println(sb);
         }
     }
