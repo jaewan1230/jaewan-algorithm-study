@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
-    static int max, R;
-    static int[] width;
+    static int R;
+    static boolean[] basePossible;
 
     public static void main(String[] args) throws IOException {
         int N = readInt(), M = readInt();
@@ -23,35 +23,42 @@ public class Main {
             arr[i] = readInt();
         Arrays.sort(arr);
 
-        width = new int[(N * (N - 1)) >> 1];
-        int idx = 0;
+        int maxdiff = arr[N - 1] - arr[0];
+        basePossible = new boolean[maxdiff + 1];
         for (int i = 0; i < N; i++)
             for (int j = 0; j < i; j++)
-                width[idx++] = arr[i] - arr[j];
-        Arrays.sort(width);
+                basePossible[arr[i] - arr[j]] = true;
 
-        int max = 0;
+        int[] heights = new int[M];
         for (int i = 0; i < M; i++)
-            max = Math.max(max, parametricSearch(0, idx - 1, readInt()));
-        if (max == 0)
+            heights[i] = readInt();
+        Arrays.sort(heights);
+
+        int best = 0;
+        for (int width = 1; width <= maxdiff; width++) {
+            if (!basePossible[width])
+                continue;
+            double upper = 2.0 * R / width;
+            // heights는 오름차순 정렬되어 있으므로 이진 탐색
+            int left = 0, right = M - 1;
+            while (left <= right) {
+                int mid = (left + right) >> 1;
+                if (heights[mid] <= upper)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+            int idx = right;
+            if (idx >= 0) {
+                int prod = width * heights[idx];
+                if (prod > best)
+                    best = prod;
+            }
+        }
+        if (best == 0)
             System.out.println(-1);
         else
-            System.out.printf("%.1f", max / 2.0);
-    }
-
-    static int parametricSearch(int left, int right, int height) {
-        int mid;
-        double upper = 2.0 * R / height;
-
-        while (right >= 0 && left <= right) {
-            mid = (left + right) >> 1;
-            if (width[mid] <= upper)
-                left = mid + 1;
-            else
-                right = mid - 1;
-        }
-
-        return right == -1 ? 0 : height * width[right];
+            System.out.printf("%.1f", best / 2.0);
     }
 
     static int pos, len;
