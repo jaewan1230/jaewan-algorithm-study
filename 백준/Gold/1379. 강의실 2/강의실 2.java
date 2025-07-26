@@ -42,10 +42,11 @@ public class Main {
             }
         }
 
-        System.out.println(roomCnt);
-        for (int i = 1; i <= N; i++) {
-            System.out.println(roomNums[i]);
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(roomCnt).append('\n');
+        for (int i = 1; i <= N; i++)
+            sb.append(roomNums[i]).append('\n');
+        System.out.print(sb);
     }
 
     static class Class implements Comparable<Class> {
