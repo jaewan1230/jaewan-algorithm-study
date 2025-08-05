@@ -1,3 +1,4 @@
+
 /*
  * 경비행기 중간 급유 k이하일 때, 연료통의 최소용량을 구하기.
  * 
@@ -11,7 +12,7 @@ import java.util.ArrayDeque;
 
 public class Main {
     static int N, K;
-    static int[][] 정거장, dist;
+    static int[][] 정거장;
 
     public static void main(String[] args) throws IOException {
         N = readInt();
@@ -24,17 +25,6 @@ public class Main {
         for (int i = 1; i <= N; i++) {
             정거장[0][i] = readInt();
             정거장[1][i] = readInt();
-        }
-
-        dist = new int[N + 2][N + 2];
-        for (int i = 0; i < N + 2; i++) {
-            for (int j = 0; j < N + 2; j++) {
-                dist[i][j] = (int) Math.ceil(
-                        Math.sqrt(
-                                Math.pow(정거장[0][i] - 정거장[0][j], 2) +
-                                        Math.pow(정거장[1][i] - 정거장[1][j], 2))
-                                / 10);
-            }
         }
 
         System.out.println(parametricSearch());
@@ -52,6 +42,13 @@ public class Main {
         return left;
     }
 
+    // 거리 계산 함수
+    static int getDist(int a, int b) {
+        double dx = 정거장[0][a] - 정거장[0][b];
+        double dy = 정거장[1][a] - 정거장[1][b];
+        return (int) Math.ceil(Math.sqrt(dx * dx + dy * dy) / 10);
+    }
+
     // 판정함수, 거리 d 이하, K번 이하 들러서 BFS가 가능한지 여부 반환
     static boolean check(int d) {
         ArrayDeque<int[]> q = new ArrayDeque<>();
@@ -62,13 +59,13 @@ public class Main {
             int[] cur = q.poll();
 
             for (int i = 1; i < N + 2; i++) {
-                if (visit[i] || dist[cur[0]][i] > d)
+                if (visit[i] || getDist(cur[0], i) > d)
                     continue;
                 if (i == N + 1)
                     return true;
                 if (cur[1] < K) {
                     q.offer(new int[] { i, cur[1] + 1 });
-                    visit[i] = true;                    
+                    visit[i] = true;
                 }
             }
         }
