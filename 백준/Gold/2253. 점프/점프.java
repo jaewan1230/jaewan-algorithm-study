@@ -31,17 +31,17 @@ public class Main {
         boolean flag = false;
         while (!queue.isEmpty()) {
             Data cur = queue.poll();
-            if (cur.pos == N) {
-                System.out.println(cur.cnt);
-                flag = true;
-                break;
-            }
 
             int nextPos, nextVelocity;
 
             // 가속 점프
             nextVelocity = cur.velocity + 1;
             nextPos = cur.pos + nextVelocity;
+            if (nextPos == N) {
+                System.out.println(cur.cnt + 1);
+                flag = true;
+                break;
+            }
             if (nextVelocity > 0 && nextPos <= N && !isSmall[nextPos] && !visit[nextPos][nextVelocity]) {
                 visit[nextPos][nextVelocity] = true;
                 queue.offer(new Data(nextPos, nextVelocity, cur.cnt + 1));
@@ -49,6 +49,11 @@ public class Main {
             // 그대로 점프
             nextVelocity = cur.velocity;
             nextPos = cur.pos + nextVelocity;
+            if (nextPos == N) {
+                System.out.println(cur.cnt + 1);
+                flag = true;
+                break;
+            }
             if (nextVelocity > 0 && nextPos <= N && !isSmall[nextPos] && !visit[nextPos][nextVelocity]) {
                 visit[nextPos][nextVelocity] = true;
                 queue.offer(new Data(nextPos, nextVelocity, cur.cnt + 1));
@@ -56,6 +61,11 @@ public class Main {
             // 감속 점프
             nextVelocity = cur.velocity - 1;
             nextPos = cur.pos + nextVelocity;
+            if (nextPos == N) {
+                System.out.println(cur.cnt + 1);
+                flag = true;
+                break;
+            }
             if (nextVelocity > 0 && nextPos <= N && !isSmall[nextPos] && !visit[nextPos][nextVelocity]) {
                 visit[nextPos][nextVelocity] = true;
                 queue.offer(new Data(nextPos, nextVelocity, cur.cnt + 1));
