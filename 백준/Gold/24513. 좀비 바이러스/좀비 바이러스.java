@@ -1,4 +1,3 @@
-
 // 12720 KB, 84 ms
 /*
  * BFS, 1번 2번이 같은 시간에 도착하면 3번 바이러스.
@@ -20,7 +19,6 @@ public class Main {
                 if (map[i][j] == 1 || map[i][j] == 2) {
                     // 종류, 시간, y, x
                     queue.offer(new Data(map[i][j], 1, i, j));
-                    res[map[i][j]]++;
                 }
             }
 
@@ -42,15 +40,16 @@ public class Main {
                         map[ny][nx] = cur.type;
                         time[ny][nx] = cur.time + 1;
                         queue.offer(new Data(cur.type, time[ny][nx], ny, nx));
-                        res[cur.type]++;
                     } else if (map[ny][nx] != 3 && time[ny][nx] == cur.time + 1) {
-                        res[map[ny][nx]]--;
-                        res[3]++;
                         map[ny][nx] = 3;
                     }
                 }
             }
         }
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
+                if (map[i][j] > 0)
+                    res[map[i][j]]++;
         System.out.printf("%d %d %d", res[1], res[2], res[3]);
     }
 
