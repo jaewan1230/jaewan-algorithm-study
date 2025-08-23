@@ -57,12 +57,9 @@ public class Main {
         int c;
         while ((c = read()) <= 32)
             ;
-        boolean negative = c == 45;
-        if (negative)
-            c = read();
         int n = c & 15;
         while ((c = read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
-        return negative ? -n : n;
+        return n;
     }
 }
