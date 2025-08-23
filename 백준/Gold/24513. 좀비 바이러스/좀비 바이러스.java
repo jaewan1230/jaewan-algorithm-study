@@ -13,13 +13,13 @@ public class Main {
         int[] res = new int[4];
         int[][] map = new int[N][M], time = new int[N][M];
 
-        ArrayDeque<int[]> queue = new ArrayDeque<>();
+        ArrayDeque<Data> queue = new ArrayDeque<>();
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++) {
                 map[i][j] = readInt();
                 if (map[i][j] == 1 || map[i][j] == 2) {
                     // 종류, 시간, y, x
-                    queue.offer(new int[] { map[i][j], 1, i, j });
+                    queue.offer(new Data(map[i][j], 1, i, j));
                     res[map[i][j]]++;
                 }
             }
@@ -30,19 +30,20 @@ public class Main {
             if (cnt == 0)
                 break;
             while (cnt-- > 0) {
-                int[] cur = queue.poll();
+                Data cur = queue.poll();
+                if (map[cur.y][cur.x] == 3)
+                    continue;
                 for (int i = 0; i < 4; i++) {
-                    int ny = cur[2] + dy[i];
-                    int nx = cur[3] + dx[i];
-                    if (ny < 0 || nx < 0 || ny >= N || nx >= M ||
-                            map[ny][nx] == -1 || map[ny][nx] == cur[0] || map[cur[2]][cur[3]] == 3)
+                    int ny = cur.y + dy[i];
+                    int nx = cur.x + dx[i];
+                    if (ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == -1 || map[ny][nx] == cur.type)
                         continue;
                     if (map[ny][nx] == 0) {
-                        map[ny][nx] = cur[0];
-                        time[ny][nx] = cur[1] + 1;
-                        queue.offer(new int[] { cur[0], time[ny][nx], ny, nx });
-                        res[cur[0]]++;
-                    } else if (map[ny][nx] != 3 && time[ny][nx] == cur[1] + 1) {
+                        map[ny][nx] = cur.type;
+                        time[ny][nx] = cur.time + 1;
+                        queue.offer(new Data(cur.type, time[ny][nx], ny, nx));
+                        res[cur.type]++;
+                    } else if (map[ny][nx] != 3 && time[ny][nx] == cur.time + 1) {
                         res[map[ny][nx]]--;
                         res[3]++;
                         map[ny][nx] = 3;
@@ -51,6 +52,18 @@ public class Main {
             }
         }
         System.out.printf("%d %d %d", res[1], res[2], res[3]);
+    }
+
+    static class Data {
+        int type, time, y, x;
+
+        public Data(int type, int time, int y, int x) {
+            this.type = type;
+            this.time = time;
+            this.y = y;
+            this.x = x;
+        }
+
     }
 
     static int pos, len;
