@@ -1,4 +1,3 @@
-
 /*
  * 레고 조각의 수 <= 1,000,000
  * 레고 조각의 길이 <= 100,000,000 (10 센티미터)
@@ -17,6 +16,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String line;
+        StringBuilder sb = new StringBuilder();
         while ((line = br.readLine()) != null) {
             int x = Integer.parseInt(line);
             x *= 10000000;
@@ -36,10 +36,10 @@ public class Main {
             }
 
             if (l1 == -1)
-                System.out.println("danger");
-            else {
-                System.out.printf("yes %d %d\n", l1, l2);
-            }
+                sb.append("danger").append('\n');
+            else
+                sb.append("yes ").append(l1).append(' ').append(l2).append('\n');
         }
+        System.out.println(sb);
     }
 }
