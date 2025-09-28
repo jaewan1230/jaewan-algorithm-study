@@ -37,16 +37,16 @@ public class Main {
         int[] dp = new int[N + 1];
         for (int i = 1; i <= N; i++) {
             int max = 0;
-            for (int child : graph[list[i].idx].next) {
+            for (int child : graph[list[i].idx].next)
                 max = Math.max(max, dp[child]);
-            }
 
             dp[list[i].idx] = 1 + max;
         }
 
-        for (int i = 1; i <= N; i++) {
-            System.out.println(dp[i]);
-        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= N; i++)
+            sb.append(dp[i]).append('\n');
+        System.out.print(sb);
     }
 
     static class Node {
