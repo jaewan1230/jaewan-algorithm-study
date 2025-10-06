@@ -40,7 +40,7 @@ public class Main {
 
         int X = 0, K = 0;
         StringBuilder sb = new StringBuilder();
-        while (!pq.isEmpty()) {
+        while (!pq.isEmpty() && cnt > 0) {
             Edge cur = pq.poll();
 
             if (cur.u == 1 || cur.v == 1 || !union(cur.u, cur.v))
@@ -49,8 +49,6 @@ public class Main {
             sb.append(cur.u).append(' ').append(cur.v).append('\n');
             X += cur.w;
             K++;
-            if (cnt == 0)
-                break;
         }
         System.out.printf("%d %d\n", X, K);
         System.out.print(sb);
