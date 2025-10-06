@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.util.PriorityQueue;
 
 public class Main {
+    static int cnt;
     static int[] parent;
 
     public static void main(String[] args) throws IOException {
         int n = readInt(), m = readInt();
+        cnt = n - 1;
         parent = new int[n + 1];
 
         for (int i = 1; i <= n; i++)
@@ -20,6 +22,7 @@ public class Main {
             int u = readInt(), v = readInt();
             if (u == 1 || v == 1)
                 continue;
+
             union(u, v);
         }
 
@@ -27,9 +30,9 @@ public class Main {
 
         for (int i = 1; i <= n; i++) {
             // 혹시 여기서 이미 연결된 간선들의 입력 안받으면 더 빨라질까?
+
             for (int j = 1; j < i; j++)
                 pq.offer(new Edge(i, j, readInt()));
-
             // 중복, 버리기
             for (int j = i; j <= n; j++)
                 readInt();
@@ -40,13 +43,14 @@ public class Main {
         while (!pq.isEmpty()) {
             Edge cur = pq.poll();
 
-            if (cur.u == 1 || cur.v == 1 || find(cur.u) == find(cur.v))
+            if (cur.u == 1 || cur.v == 1 || !union(cur.u, cur.v))
                 continue;
 
-            union(cur.u, cur.v);
             sb.append(cur.u).append(' ').append(cur.v).append('\n');
             X += cur.w;
             K++;
+            if (cnt == 0)
+                break;
         }
         System.out.printf("%d %d\n", X, K);
         System.out.print(sb);
@@ -74,10 +78,15 @@ public class Main {
         return parent[x];
     }
 
-    static void union(int u, int v) {
+    static boolean union(int u, int v) {
         int rootU = find(u), rootV = find(v);
 
-        parent[rootV] = rootU;
+        if (rootU != rootV) {
+            cnt--;
+            parent[rootV] = rootU;
+            return true;
+        }
+        return false;
     }
 
     static int pos, len;
