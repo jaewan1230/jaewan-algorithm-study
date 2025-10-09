@@ -4,10 +4,20 @@
  * > i 번째 선택하는 경우, dp[j] : h[i] - h[j] >= S 만족하는 j 이분탐색, dp[j] + cost[i]
  * > i 번째 선택하지 않는 경우, dp[i - 1]
  * 중 최댓값을 저장
+ * 
+ * O(N log H)
+ * 
+ * ---
+ * 
+ * 높이 최대가 20,000,000 이므로, dp를 높이로 잡아서, dp[i - H] + C[i], dp[i-1] 
+ * 선택하는 경우, 선택안하는 경우 최댓값을 비교. 하면
+ * 
+ * O(H)
+ * 
+ * 
  */
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     static int N, S;
@@ -16,19 +26,35 @@ public class Main {
     public static void main(String[] args) throws IOException {
         N = readInt();
         S = readInt();
-        paintings = new Painting[N + 1];
-        paintings[0] = new Painting(0, 0);
-        for (int i = 1; i <= N; i++)
-            paintings[i] = new Painting(readInt(), readInt());
-        Arrays.sort(paintings, 1, N + 1);
+        // paintings = new Painting[N + 1];
+        // paintings[0] = new Painting(0, 0);
+        // for (int i = 1; i <= N; i++)
+        // paintings[i] = new Painting(readInt(), readInt());
+        // Arrays.sort(paintings, 1, N + 1);
 
-        int[] dp = new int[N + 1];
-        for (int i = 1; i <= N; i++) {
-            int j = binarySearch(i);
-            dp[i] = Math.max(dp[j] + paintings[i].c, dp[i - 1]);
+        // int[] dp = new int[N + 1];
+        // for (int i = 1; i <= N; i++) {
+        // int j = binarySearch(i);
+        // dp[i] = Math.max(dp[j] + paintings[i].c, dp[i - 1]);
+        // }
+
+        // System.out.println(dp[N]);
+
+        int[] dp = new int[20_000_001], arr = new int[20_000_001];
+
+        for (int i = 0; i < N; i++) {
+            int h = readInt(), c = readInt();
+            arr[h] = Math.max(arr[h], c);
         }
 
-        System.out.println(dp[N]);
+        for (int i = 1; i < S; i++) {
+            dp[i] = Math.max(arr[i], dp[i - 1]);
+        }
+        for (int i = S; i < 20_000_001; i++) {
+            dp[i] = Math.max(dp[i - S] + arr[i], dp[i - 1]);
+        }
+
+        System.out.println(dp[20_000_000]);
     }
 
     // H - h[i] >= S 인 최대의 idx 값 리턴
