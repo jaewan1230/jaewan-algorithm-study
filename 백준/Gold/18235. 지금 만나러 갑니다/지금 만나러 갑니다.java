@@ -41,7 +41,7 @@ public class Main {
             return;
         }
 
-        dfs(A, B, 0);
+        dfs(Math.min(A, B), Math.max(A, B), 0);
         System.out.println(res == 30 ? -1 : res);
     }
 
@@ -56,7 +56,6 @@ public class Main {
 
         if ((Math.abs(a - b) & (2 << d)) != 0) {
             dfs(a + (1 << d), b - (1 << d), d + 1);
-            dfs(a - (1 << d), b + (1 << d), d + 1);
         } else {
             dfs(a + (1 << d), b + (1 << d), d + 1);
             dfs(a - (1 << d), b - (1 << d), d + 1);
