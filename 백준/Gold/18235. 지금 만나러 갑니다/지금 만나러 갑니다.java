@@ -14,62 +14,49 @@
  * 이것보다 늘어나는 경우의 i 까지는 증가할 수 없음.
  * 
  * 즉, 모든 경우를 해도, 상태의 총 가짓수가 1,000,000을 넘지 않기 때문에 (범위 체크만 한다면), 시간복잡도 내 충분히 구현 가능.
+ * 
+ * ---
+ * 
+ * 같은 일자에, 같은 방향으로 점프하면 '차'는 줄어들지 않음.
+ * 반대 방향으로 점프하면, '차'는 (2 << d) 만큼 줄어들거나, 늘어남.
+ * 
+ * 따라서, 차 % (2 << (d + 1)) == (2 << d) 면, 해당 일자에 만나게 됨.
  */
 
 import java.io.IOException;
-import java.util.ArrayDeque;
 
 public class Main {
-    static int N;
+    static int N, res = 30;
 
     public static void main(String[] args) throws IOException {
         N = readInt();
+        int A = readInt(), B = readInt();
 
-        System.out.println(BFS(readInt(), readInt()));
-    }
-
-    static int BFS(int a, int b) {
-        ArrayDeque<int[]> queue = new ArrayDeque<>();
-        int[] pos = new int[N + 1];
-
-        // 오/육리, 일수, 위치
-        queue.offer(new int[] { 5, 0, a });
-        queue.offer(new int[] { 1, 0, b });
-
-        while (!queue.isEmpty()) {
-            int next;
-            int[] cur = queue.poll();
-
-            if (cur[0] == 5) {
-                next = cur[2] - (1 << cur[1]);
-                if (0 < next && next <= N) {
-                    pos[next] = cur[1] + 1;
-                    queue.offer(new int[] { 5, cur[1] + 1, next });
-                }
-
-                next = cur[2] + (1 << cur[1]);
-                if (0 < next && next <= N) {
-                    pos[next] = cur[1] + 1;
-                    queue.offer(new int[] { 5, cur[1] + 1, next });
-                }
-            } else {
-                next = cur[2] - (1 << cur[1]);
-                if (0 < next && next <= N) {
-                    if (pos[next] == cur[1] + 1)
-                        return pos[next];
-                    queue.offer(new int[] { 6, cur[1] + 1, next });
-                }
-
-                next = cur[2] + (1 << cur[1]);
-                if (0 < next && next <= N) {
-                    if (pos[next] == cur[1] + 1)
-                        return pos[next];
-                    queue.offer(new int[] { 6, cur[1] + 1, next });
-                }
-            }
+        if ((A - B) % 2 == 1) {
+            System.out.println(-1);
+            return;
         }
 
-        return -1;
+        dfs(A, B, 0);
+        System.out.println(res == 30 ? -1 : res);
+    }
+
+    static void dfs(int a, int b, int d) {
+        if (a <= 0 || a > N || b <= 0 || b > N)
+            return;
+
+        if (a == b) {
+            res = Math.min(res, d);
+            return;
+        }
+
+        if (Math.abs(a - b) % (2 << (d + 1)) == (2 << d)) {
+            dfs(a + (1 << d), b - (1 << d), d + 1);
+            dfs(a - (1 << d), b + (1 << d), d + 1);
+        } else {
+            dfs(a + (1 << d), b + (1 << d), d + 1);
+            dfs(a - (1 << d), b - (1 << d), d + 1);
+        }
     }
 
     static int pos, len;
