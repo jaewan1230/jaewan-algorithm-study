@@ -83,8 +83,11 @@ public class Main {
         Arrays.fill(dist, Long.MAX_VALUE);
         dist[1] = 0;
 
+        visit = new boolean[N + 1];
         PriorityQueue<Data> pq = new PriorityQueue<>();
         pq.offer(new Data(1, 0));
+        visit[1] = true;
+
         while (!pq.isEmpty()) {
             Data cur = pq.poll();
 
@@ -92,7 +95,7 @@ public class Main {
             for (Integer next : graph[cur.n].next) {
                 long nextDist = dist[cur.n] + (isUnsafe[next] ? q : p);
                 // 감염된 도시로는 못감 || 가격이 더 안싸지면 안감
-                if (isInfected[next] || dist[next] <= nextDist)
+                if (visit[next] || isInfected[next] || dist[next] <= nextDist)
                     continue;
 
                 if (next == N) {
@@ -100,6 +103,7 @@ public class Main {
                     System.exit(0);
                 }
                 dist[next] = nextDist;
+                visit[next] = true;
                 pq.offer(new Data(next, nextDist));
             }
         }
@@ -138,10 +142,14 @@ public class Main {
 
     static int readInt() throws IOException {
         int c;
-        while ((c = read()) <= 32);
+        while ((c = read()) <= 32)
+            ;
+        boolean negative = c == 45;
+        if (negative)
+            c = read();
         int n = c & 15;
         while ((c = read()) > 47)
             n = (n << 3) + (n << 1) + (c & 15);
-        return n;
+        return negative ? -n : n;
     }
 }
