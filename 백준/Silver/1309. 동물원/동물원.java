@@ -18,24 +18,37 @@ dp[i][1] = dp[i-1][0] + dp[i-1][2]
 dp[i][2] = dp[i-1][0] + dp[i-1][1] + dp[i-1][2]
 
 최종 답 = dp[N][0] + dp[N][1] + dp[N][2] % 9901
+
+---
+
+최적화 한다면,,
+좌, 우측에 완전히 동일하게 배치되므로 줄일 수 있다.
+dp[i] = 좌[i] + 우[i] + 비어있는[i]
+좌[i] = 우[i-1] + 비어있는[i-1]
+우[i] = 좌[i-1] + 비어있는[i-1]
+비어있는[i] = 좌[i-1] + 우[i-1] + 비어있는[i-1] = dp[i-1]
+
+즉, dp[i] = 좌[i-1] + 비어있는[i-1] + 우[i-1] + 비어있는[i-1] + dp[i-1] = 2 x dp[i-1] + dp[i-2]
+dp[i] = 2 x dp[i-1] + dp[i-2], dp[1] = 3, dp[2] = 7
+
  */
 
 import java.io.IOException;
 
 public class Main {
-    static int N;
-    static int[][] dp;
 
     public static void main(String[] args) throws IOException {
-        N = readInt();
-        dp = new int[N + 1][3];
-        dp[0][0] = dp[0][1] = dp[0][2] = 1;
+        int N = readInt();
+        final int MOD = 9_901;
+        int res = 3;
+        int prev = 1;
         for (int i = 1; i < N; i++) {
-            dp[i][0] = (dp[i - 1][1] + dp[i - 1][2]) % 9901;
-            dp[i][1] = (dp[i - 1][0] + dp[i - 1][2]) % 9901;
-            dp[i][2] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2]) % 9901;
+            int temp = res;
+            res = (res << 1) + prev;
+            res %= MOD;
+            prev = temp;
         }
-        System.out.println((dp[N - 1][0] + dp[N - 1][1] + dp[N - 1][2]) % 9901);
+        System.out.println(res);
     }
 
     public static int pos, len;
