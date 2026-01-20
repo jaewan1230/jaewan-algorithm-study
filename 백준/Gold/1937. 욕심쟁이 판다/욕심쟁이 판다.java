@@ -21,16 +21,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         N = readInt();
-        map = new int[N][N];
-        dp = new int[N][N];
+        map = new int[N + 2][N + 2];
+        dp = new int[N + 2][N + 2];
 
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
+        for (int i = 1; i <= N; i++)
+            for (int j = 1; j <= N; j++)
                 map[i][j] = readInt();
 
         int max = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
                 max = Math.max(max, dfs(i, j));
             }
         }
@@ -46,7 +46,7 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             int ny = y + dy[i], nx = x + dx[i];
 
-            if (ny < 0 || nx < 0 || ny >= N || nx >= N || map[ny][nx] <= map[y][x])
+            if (map[ny][nx] <= map[y][x])
                 continue;
             max = Math.max(max, dfs(ny, nx));
         }
