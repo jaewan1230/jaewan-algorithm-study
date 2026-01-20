@@ -31,10 +31,7 @@ public class Main {
         int max = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (dp[i][j] == 0) {
-                    dfs(i, j);
-                    max = Math.max(max, dp[i][j]);
-                }
+                max = Math.max(max, dfs(i, j));
             }
         }
         System.out.println(max);
@@ -44,17 +41,17 @@ public class Main {
         if (dp[y][x] != 0)
             return dp[y][x];
 
-        dp[y][x] = 1;
+        int max = 0;
 
         for (int i = 0; i < 4; i++) {
             int ny = y + dy[i], nx = x + dx[i];
 
             if (ny < 0 || nx < 0 || ny >= N || nx >= N || map[ny][nx] <= map[y][x])
                 continue;
-            dp[y][x] = Math.max(dp[y][x], dfs(ny, nx) + 1);
+            max = Math.max(max, dfs(ny, nx));
         }
 
-        return dp[y][x];
+        return dp[y][x] = max + 1;
     }
 
     public static int pos, len;
