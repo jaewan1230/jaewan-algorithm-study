@@ -46,9 +46,8 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             int ny = y + dy[i], nx = x + dx[i];
 
-            if (map[ny][nx] <= map[y][x])
-                continue;
-            max = Math.max(max, dfs(ny, nx));
+            if (map[ny][nx] > map[y][x])
+                max = Math.max(max, dfs(ny, nx));
         }
 
         return dp[y][x] = max + 1;
