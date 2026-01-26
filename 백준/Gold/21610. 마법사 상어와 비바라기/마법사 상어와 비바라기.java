@@ -25,12 +25,11 @@ M 번 이동 명령 후 격자에 저장된 물의 양의 합 구하기
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main {
     static int N, M;
     static int[][] map;
-    static boolean[][] visit;
+    static boolean[][] cloud;
 
     public static void main(String[] args) throws IOException {
         N = readInt();
@@ -40,52 +39,60 @@ public class Main {
             for (int j = 0; j < N; j++)
                 map[i][j] = readInt();
 
-        ArrayList<int[]> cloudList = new ArrayList<>();
-        cloudList.add(new int[] { N - 1, 0 });
-        cloudList.add(new int[] { N - 1, 1 });
-        cloudList.add(new int[] { N - 2, 0 });
-        cloudList.add(new int[] { N - 2, 1 });
+        cloud = new boolean[N][N];
+        cloud[N - 1][0] = true;
+        cloud[N - 1][1] = true;
+        cloud[N - 2][0] = true;
+        cloud[N - 2][1] = true;
 
         int[] dy = { 0, -1, -1, -1, 0, 1, 1, 1 }, dx = { -1, -1, 0, 1, 1, 1, 0, -1 };
         // 대각선은 1, 3, 5, 7
         while (M-- > 0) {
             int d = readInt() - 1, s = readInt();
 
-            // 1. 구름 이동
-            visit = new boolean[N][N];
-            ArrayList<int[]> newCloudList = new ArrayList<>();
-            for (int[] cloud : cloudList) {
-                int ny = (cloud[0] + dy[d] * s) % N, nx = (cloud[1] + dx[d] * s) % N;
-                if (ny < 0)
-                    ny += N;
-                if (nx < 0)
-                    nx += N;
-                newCloudList.add(new int[] { ny, nx });
-                visit[ny][nx] = true;
-                // 2. 물의 양 증가
-                map[ny][nx]++;
-            }
-
-            // 4. 물 복사 버그 마법
-            for (int[] cloud : newCloudList) {
-                for (int dir = 1; dir < 8; dir += 2) {
-                    int ny = cloud[0] + dy[dir], nx = cloud[1] + dx[dir];
-                    if (ny < 0 || nx < 0 || ny >= N || nx >= N || map[ny][nx] == 0)
-                        continue;
-                    map[cloud[0]][cloud[1]]++;
-                }
-            }
-
-            // 5. 구름 생성하고 물 2 감소. visit 하지 않은 곳만
-            cloudList.clear();
+            // 1. 구름 이동 및 물 증가
+            boolean[][] newCloud = new boolean[N][N];
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    if (map[i][j] < 2 || visit[i][j])
+                    if (!cloud[i][j])
                         continue;
-                    map[i][j] -= 2;
-                    cloudList.add(new int[] { i, j });
+                    int ny = (i + dy[d] * s) % N, nx = (j + dx[d] * s) % N;
+                    if (ny < 0)
+                        ny += N;
+                    if (nx < 0)
+                        nx += N;
+                    newCloud[ny][nx] = true;
+                    map[ny][nx]++;
                 }
             }
+            cloud = newCloud;
+
+            // 4. 물 복사 버그 마법
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if (!cloud[i][j])
+                        continue;
+                    int cnt = 0;
+                    for (int dir = 1; dir < 8; dir += 2) {
+                        int ny = i + dy[dir], nx = j + dx[dir];
+                        if (ny >= 0 && nx >= 0 && ny < N && nx < N && map[ny][nx] > 0)
+                            cnt++;
+                    }
+                    map[i][j] += cnt;
+                }
+            }
+
+            // 5. 구름 생성하고 물 2 감소. cloud에 있던 곳 제외
+            boolean[][] newCloud2 = new boolean[N][N];
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if (map[i][j] >= 2 && !cloud[i][j]) {
+                        map[i][j] -= 2;
+                        newCloud2[i][j] = true;
+                    }
+                }
+            }
+            cloud = newCloud2;
         }
 
         int res = 0;
