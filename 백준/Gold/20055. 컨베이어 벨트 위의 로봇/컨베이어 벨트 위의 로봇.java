@@ -20,7 +20,7 @@ pointer 로 시작점을 관리하여 벨트 회전을 구현
 import java.io.IOException;
 
 public class Main {
-    static int N, K, start;
+    static int N, K, start, cnt;
     static boolean[] robot;
     static int[] A;
 
@@ -44,7 +44,8 @@ public class Main {
             int next = (cur + 1) % (N << 1);
             if (robot[cur] && !robot[next] && A[next] > 0) {
                 robot[cur] = false;
-                A[next]--;
+                if (--A[next] == 0)
+                    cnt++;
             }
 
             for (int i = N - 2; i >= 0; i--) {
@@ -53,22 +54,19 @@ public class Main {
                 if (robot[cur] && !robot[next] && A[next] > 0) {
                     robot[cur] = false;
                     robot[next] = true;
-                    A[next]--;
+                    if (--A[next] == 0)
+                        cnt++;
                 }
             }
 
             // 3. 로봇 올리기
             if (A[start] > 0) {
                 robot[start] = true;
-                A[start]--;
+                if (--A[start] == 0)
+                    cnt++;
             }
 
             // 4. 종료 검사
-            int cnt = 0;
-            for (int durability : A) {
-                if (durability == 0)
-                    cnt++;
-            }
             if (cnt >= K)
                 break;
 
